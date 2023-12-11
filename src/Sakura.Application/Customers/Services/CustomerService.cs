@@ -4,6 +4,6 @@ namespace Sakura.Application.Customers
 {
     public interface CustomerService
     {
-        Task<IEnumerable<CustomerModel>> Get();
+        IEnumerable<CustomerModel> Get();
     }
 }

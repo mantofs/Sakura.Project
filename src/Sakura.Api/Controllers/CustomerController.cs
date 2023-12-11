@@ -18,9 +18,9 @@ public class CustomerController : ControllerBase
     }
 
     [HttpGet(Name = "Get")]
-    public async Task<ActionResult> Get()
+    public ActionResult Get()
     {
-        var customers = await _customerService.Get();
+        var customers = _customerService.Get();
         return Ok(customers);
     }
 }

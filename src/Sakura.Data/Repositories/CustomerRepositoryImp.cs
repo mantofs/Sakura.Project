@@ -16,11 +16,11 @@ namespace Sakura.Data.Repositories
             _readonlyDbContext = readonlyDbContext ?? throw new NullReferenceException(nameof(readonlyDbContext));
         }
 
-        public IAsyncEnumerable<Customer> GetAsync()
+        public IEnumerable<Customer> Get()
         {
             return _readonlyDbContext.Customers
                                      .AsNoTracking()
-                                     .AsAsyncEnumerable();
+                                     .ToList();
         }
     }
 }
