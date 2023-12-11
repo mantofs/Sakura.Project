@@ -1,3 +1,4 @@
+using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
 using Sakura.Domain.Entities;
 
@@ -12,8 +13,10 @@ public class SakuraDbReadOnlyContext : DbContext
     {
     }
 
-    protected override void OnModelCreating(ModelBuilder builder)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        builder.ApplyConfigurationsFromAssembly(typeof(SakuraDbReadOnlyContext).Assembly);
+        modelBuilder.Ignore<ValidationResult>();
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(SakuraDbReadOnlyContext).Assembly);
+        base.OnModelCreating(modelBuilder);
     }
 }
