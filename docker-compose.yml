@@ -7,3 +7,5 @@ services:
     environment:
       POSTGRES_PASSWORD: sakura.pass123!
       POSTGRES_USER: sakura.project
+    ports:
+      - 5432:5432
