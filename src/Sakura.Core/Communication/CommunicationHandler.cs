@@ -1,24 +1,12 @@
-using MediatR;
 using Sakura.Core.Messages;
 using Sakura.Core.Messages.CommonMessages.Notifications;
 
-namespace Sakura.Core.Communication;
-
-public class CommunicationHandler
+namespace Sakura.Core.Communication
 {
-    readonly IMediator _mediator;
-
-    public CommunicationHandler(IMediator mediator)
+    public interface CommunicationHandler
     {
-        _mediator = mediator ?? throw new NullReferenceException(nameof(mediator));
+        Task<bool> PublishCommand<T>(T command) where T : Command;
+        Task PublishEvent<T>(T @event) where T : Event;
+        Task PublishNotification<T>(T notification) where T : DomainNotification;
     }
-
-    public async Task<bool> PublishCommand<T>(T command) where T : Command
-        => await _mediator.Send(command);
-
-    public async Task PublishEvent<T>(T @event) where T : Event
-        => await _mediator.Publish(@event);
-
-    public async Task PublishNotification<T>(T notification) where T : DomainNotification
-        => await _mediator.Publish(notification);
 }

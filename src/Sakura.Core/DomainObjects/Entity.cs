@@ -19,7 +19,7 @@ public abstract class Entity
     }
     public virtual void SetCreated(DateTime? createdAt = null)
     {
-        Created = createdAt ?? DateTime.Now;
+        Created = Updated = createdAt ?? DateTime.Now;
     }
     public abstract bool IsValid();
 

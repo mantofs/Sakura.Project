@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Sakura.Core.Data;
 using Sakura.Data.Repositories;
 using Sakura.Domain.DomainServices;
 
@@ -19,6 +20,8 @@ namespace Sakura.Data.Configurations
             services.AddDbContext<SakuraDbReadOnlyContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("SakuraProjectDBRO")));
 
+
+            services.AddScoped<UnitOfWork, SakuraDbContext>();
             services.AddScoped<CustomerRepository, CustomerRepositoryImp>();
         }
     }

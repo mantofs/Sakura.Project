@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Threading;
 using Microsoft.EntityFrameworkCore;
 using Sakura.Domain.DomainServices;
 using Sakura.Domain.Entities;
@@ -11,9 +11,11 @@ namespace Sakura.Data.Repositories
     public class CustomerRepositoryImp : CustomerRepository
     {
         private readonly SakuraDbReadOnlyContext _readonlyDbContext;
-        public CustomerRepositoryImp(SakuraDbReadOnlyContext readonlyDbContext)
+        private readonly SakuraDbContext _context;
+        public CustomerRepositoryImp(SakuraDbReadOnlyContext readonlyDbContext, SakuraDbContext context)
         {
             _readonlyDbContext = readonlyDbContext ?? throw new NullReferenceException(nameof(readonlyDbContext));
+            _context = context ?? throw new NullReferenceException(nameof(context));
         }
 
         public IEnumerable<Customer> Get()
@@ -21,6 +23,22 @@ namespace Sakura.Data.Repositories
             return _readonlyDbContext.Customers
                                      .AsNoTracking()
                                      .ToList();
+        }
+        public Customer? Get(Guid id)
+        {
+            return _context.Customers.Find(id);
+        }
+        public void Add(Customer customer)
+        {
+            _context.Customers.Add(customer);
+        }
+        public void Update(Customer customer)
+        {
+            _context.Customers.Update(customer);
+        }
+        public void Remove(Customer customer)
+        {
+            _context.Customers.Remove(customer);
         }
     }
 }

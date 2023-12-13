@@ -1,9 +1,11 @@
 ﻿using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
+using Sakura.Core;
+using Sakura.Core.Data;
 using Sakura.Domain.Entities;
 
 namespace Sakura.Data;
-public class SakuraDbContext : DbContext
+public class SakuraDbContext : DbContext, UnitOfWork
 {
     public DbSet<Customer> Customers { get; set; }
 
@@ -25,5 +27,24 @@ public class SakuraDbContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(SakuraDbContext).Assembly);
 
         base.OnModelCreating(modelBuilder);
+    }
+
+    public async Task<bool> Commit()
+    {
+        foreach (var entry in ChangeTracker.Entries().Where(entry => entry.Entity.GetType().IsAssignableFrom(typeof(Entity))))
+        {
+            if (entry.State == EntityState.Added)
+            {
+                ((Entity)entry.Entity).SetCreated();
+            }
+
+            if (entry.State == EntityState.Modified)
+            {
+                ((Entity)entry.Entity).SetUpdated();
+            }
+
+        }
+
+        return await base.SaveChangesAsync() > 0;
     }
 }

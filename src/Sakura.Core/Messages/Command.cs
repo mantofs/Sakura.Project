@@ -11,10 +11,7 @@ namespace Sakura.Core.Messages
     {
       Timestamp = DateTime.Now;
     }
-    public virtual bool EhValido()
-    {
-      throw new NotImplementedException();
-    }
+    public abstract bool IsValid();
 
   }
 }
