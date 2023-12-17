@@ -31,7 +31,7 @@ public class SakuraDbContext : DbContext, UnitOfWork
 
     public async Task<bool> Commit()
     {
-        foreach (var entry in ChangeTracker.Entries().Where(entry => entry.Entity.GetType().IsAssignableFrom(typeof(Entity))))
+        foreach (var entry in ChangeTracker.Entries().Where(entry => typeof(Entity).IsAssignableFrom(entry.Entity.GetType())))
         {
             if (entry.State == EntityState.Added)
             {

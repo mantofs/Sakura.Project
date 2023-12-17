@@ -8,6 +8,11 @@ public class CreateCustomerCommand : Command
     [EmailAddress]
     public string? Email { get; set; }
 
+    public CreateCustomerCommand(string? email)
+    {
+        Email = email;
+    }
+
     public override bool IsValid()
     {
         return Email is not null;

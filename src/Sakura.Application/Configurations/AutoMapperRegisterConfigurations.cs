@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Sakura.Application.Profiles;
 
 namespace Sakura.Application.Configurations
 {
@@ -8,7 +9,7 @@ namespace Sakura.Application.Configurations
         {
             if (services == null) throw new NullReferenceException(nameof(services));
 
-            services.AddAutoMapper(typeof(AutoMapperRegisterConfigurations).GetType().Assembly);
+            services.AddAutoMapper(typeof(CustomerMappingProfile));
         }
     }
 }

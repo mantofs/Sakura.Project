@@ -21,7 +21,8 @@ namespace Sakura.Data.Configurations
             options.UseNpgsql(configuration.GetConnectionString("SakuraProjectDBRO")));
 
 
-            services.AddScoped<UnitOfWork, SakuraDbContext>();
+            services.AddScoped<UnitOfWork>(provider => provider.GetRequiredService<SakuraDbContext>());
+
             services.AddScoped<CustomerRepository, CustomerRepositoryImp>();
         }
     }

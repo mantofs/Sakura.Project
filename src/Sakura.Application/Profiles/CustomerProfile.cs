@@ -4,11 +4,12 @@ using Sakura.Domain.Entities;
 
 namespace Sakura.Application.Profiles
 {
-    public class CustomerProfile : Profile
+    public class CustomerMappingProfile : Profile
     {
-        protected internal CustomerProfile() : base()
+        public CustomerMappingProfile()
         {
             CreateMap<Customer, CustomerModel>();
+            //CreateMap<IEnumerable<Customer>, IEnumerable<CustomerModel>>();
         }
     }
 }

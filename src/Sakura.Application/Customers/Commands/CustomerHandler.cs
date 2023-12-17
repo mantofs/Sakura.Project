@@ -11,7 +11,7 @@ namespace Sakura.Application.Customers
 {
     public class CustomerHandler : IRequestHandler<CreateCustomerCommand, bool>,
                                    IRequestHandler<UpdateCustomerCommand, bool>,
-                                   IRequestHandler<RemoveCustomerCommand, bool>
+                                   IRequestHandler<DeleteCustomerCommand, bool>
     {
         private readonly UnitOfWork _unitOfWork;
         private readonly CustomerRepository _customerRepository;
@@ -27,11 +27,11 @@ namespace Sakura.Application.Customers
 
         public async Task<bool> Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
         {
-            var customer = _customerRepository.Get(request.Id);
+            var customer = _customerRepository.Get(request.CustomerId);
 
             if (customer == null)
             {
-                await _communicationHandler.PublishNotification(new DomainNotification(request.MessageType, "Customer is not found."));
+                await _communicationHandler.PublishNotificationAsync(new DomainNotification(request.MessageType, "Customer is not found."));
                 return false;
             }
 
@@ -42,13 +42,13 @@ namespace Sakura.Application.Customers
             return await _unitOfWork.Commit();
         }
 
-        public async Task<bool> Handle(RemoveCustomerCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(DeleteCustomerCommand request, CancellationToken cancellationToken)
         {
-            var customer = _customerRepository.Get(request.Id);
+            var customer = _customerRepository.Get(request.CustomerId);
 
             if (customer == null)
             {
-                await _communicationHandler.PublishNotification(new DomainNotification(request.MessageType, "Customer is not found."));
+                await _communicationHandler.PublishNotificationAsync(new DomainNotification(request.MessageType, "Customer is not found."));
                 return false;
             }
 
@@ -74,7 +74,7 @@ namespace Sakura.Application.Customers
 
             foreach (var error in request.ValidationResult.Errors)
             {
-                _communicationHandler.PublishNotification(new DomainNotification(request.MessageType, error.ErrorMessage));
+                _communicationHandler.PublishNotificationAsync(new DomainNotification(request.MessageType, error.ErrorMessage));
             }
             return false;
         }

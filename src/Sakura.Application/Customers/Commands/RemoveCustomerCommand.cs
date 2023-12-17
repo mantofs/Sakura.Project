@@ -3,13 +3,18 @@ using Sakura.Core.Messages;
 
 namespace Sakura.Application;
 
-public class RemoveCustomerCommand : Command
+public class DeleteCustomerCommand : Command
 {
+    public DeleteCustomerCommand(Guid customerId)
+    {
+        CustomerId = customerId;
+    }
+
     [Required]
-    public Guid Id { get; set; }
+    public Guid CustomerId { get; set; }
 
     public override bool IsValid()
     {
-        return !Guid.Empty.Equals(Id);
+        return !Guid.Empty.Equals(CustomerId);
     }
 }
