@@ -61,7 +61,15 @@ namespace Sakura.Application.Customers
         {
             if (!IsValid(request)) return false;
 
-            var customer = Customer.Create(email: request.Email);
+            var customer = _customerRepository.GetByEmail(request.Email);
+
+            if (customer != null)
+            {
+                await _communicationHandler.PublishNotificationAsync(new DomainNotification(request.MessageType, "Customer already exists."));
+                return false;
+            }
+
+            customer = Customer.Create(email: request.Email);
 
             _customerRepository.Add(customer);
 

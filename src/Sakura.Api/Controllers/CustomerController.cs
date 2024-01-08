@@ -3,6 +3,7 @@ using Sakura.Application;
 using Sakura.Application.Customers;
 using Sakura.Application.Customers.Services.Models;
 using Sakura.Core.Communication;
+using Sakura.Core.Messages.CommonMessages.Notifications;
 
 namespace Sakura.Api.Controllers;
 
@@ -13,14 +14,16 @@ public class CustomerController : ControllerBase
     private readonly ILogger<CustomerController> _logger;
     private readonly CustomerService _customerService;
     private readonly CommunicationHandler _communicator;
-
+    private readonly INotificationOutputHandler _notificationHandler;
     public CustomerController(ILogger<CustomerController> logger,
     CustomerService customerService,
-    CommunicationHandler communicator)
+    CommunicationHandler communicator,
+    INotificationOutputHandler notificationHandler)
     {
         _logger = logger ?? throw new NullReferenceException(nameof(logger));
         _customerService = customerService ?? throw new NullReferenceException(nameof(customerService));
         _communicator = communicator ?? throw new NullReferenceException(nameof(communicator));
+        _notificationHandler = notificationHandler ?? throw new NullReferenceException(nameof(notificationHandler));
     }
 
     [HttpGet("get", Name = "Get")]
@@ -37,6 +40,9 @@ public class CustomerController : ControllerBase
 
         await _communicator.PublishCommandAsync(command);
 
+        if (_notificationHandler.HasNotifications(out IEnumerable<string> messages))
+            return BadRequest(messages);
+
         return Ok();
     }
 
@@ -47,6 +53,9 @@ public class CustomerController : ControllerBase
 
         await _communicator.PublishCommandAsync(command);
 
+        if (_notificationHandler.HasNotifications(out IEnumerable<string> messages))
+            return BadRequest(messages);
+
         return Ok();
     }
 
@@ -56,6 +65,9 @@ public class CustomerController : ControllerBase
         var command = new DeleteCustomerCommand(customerId: customerId);
 
         await _communicator.PublishCommandAsync(command);
+
+        if (_notificationHandler.HasNotifications(out IEnumerable<string> messages))
+            return BadRequest(messages);
 
         return Ok();
     }

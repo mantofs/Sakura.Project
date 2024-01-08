@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Sakura.Application.Customers;
 using Sakura.Core.Communication;
+using Sakura.Core.Messages.CommonMessages.Notifications;
 using Sakura.Data.Configurations;
 
 namespace Sakura.Application.Configurations
@@ -17,7 +18,11 @@ namespace Sakura.Application.Configurations
 
             services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
 
-            services.AddScoped<CommunicationHandler, CommunicationHandlerImp>();
+            services.AddTransient<CommunicationHandler, CommunicationHandlerImp>();
+
+            services.AddScoped<INotificationHandler<DomainNotification>, DomainNotificationHandler>();
+
+            services.AddScoped(provider => (INotificationOutputHandler)provider.GetRequiredService<INotificationHandler<DomainNotification>>());
 
             services.AddTransient<CustomerService, CustomerServiceImp>();
         }

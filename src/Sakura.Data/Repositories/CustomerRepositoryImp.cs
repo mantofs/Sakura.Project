@@ -24,6 +24,12 @@ namespace Sakura.Data.Repositories
                                      .AsNoTracking()
                                      .ToList();
         }
+        public Customer? GetByEmail(string email)
+        {
+            return _readonlyDbContext.Customers
+                                     .AsNoTracking()
+                                     .FirstOrDefault(_ => _.Email.Equals(email));
+        }
         public Customer? Get(Guid id)
         {
             return _context.Customers.Find(id);

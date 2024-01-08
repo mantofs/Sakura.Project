@@ -2,7 +2,7 @@ using MediatR;
 
 namespace Sakura.Core.Messages.CommonMessages.Notifications
 {
-  public class DomainNotificationHandler : INotificationHandler<DomainNotification>
+  public class DomainNotificationHandler : INotificationHandler<DomainNotification>, INotificationOutputHandler
   {
     private List<DomainNotification> _notifications;
     public DomainNotificationHandler()
@@ -22,6 +22,15 @@ namespace Sakura.Core.Messages.CommonMessages.Notifications
     public virtual bool HasNotifications()
     {
       return GetNotifications().Any();
+    }
+
+    public virtual bool HasNotifications(out IEnumerable<string> messages)
+    {
+      messages = _notifications.Select(_ => _.Value);
+
+      if (!HasNotifications()) return false;
+
+      return true;
     }
 
     public void Dispose()
